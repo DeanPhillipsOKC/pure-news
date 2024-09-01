@@ -73,7 +73,7 @@ def main():
         layout="centered"
     )
 
-    print(os.getenv("OPENAI_API_KEY"))
+    st.write(os.getenv("OPENAI_API_KEY"))
 
     chain = get_filter_chain()
  
