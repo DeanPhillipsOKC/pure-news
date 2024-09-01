@@ -6,6 +6,7 @@ from langchain.prompts import HumanMessagePromptTemplate, AIMessagePromptTemplat
 from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 
+
 # AP: url =  "https://rss.app/feeds/SyIisu9HESEvayPf.xml"
 
 url = "https://rss.app/feeds/gn8XLqZTeImTjrmW.xml"
@@ -65,6 +66,9 @@ def get_filter_chain():
 def get_filtered_article(_chain, paragraphs):
     return _chain.invoke({"article": paragraphs})
 
+def toggle_article_opened(button_caption):
+    st.session_state[f'article_opened_{button_caption}'] = not st.session_state[f'article_opened_{button_caption}'] 
+
 def main():
     st.set_page_config(
         page_title="PureNews",
@@ -76,9 +80,12 @@ def main():
 
     for entry in feed.entries: # <-- remove when done debugging
 
-        btn = st.button(f"{entry.title}", use_container_width=True, )
-        container = st.empty()
-        if btn:
+        # Create state for button
+        if f'article_opened_{entry.title}' not in st.session_state:
+            st.session_state[f'article_opened_{entry.title}'] = True
+
+        btn = st.button(f"{entry.title}", use_container_width=True, on_click=toggle_article_opened, args=(f'{entry.title}',))
+        if st.session_state[f'article_opened_{entry.title}'] and btn:
             bar = st.progress(0)
             paragraphs = fetch_article_contents(entry.link)
             bar.progress(50)
@@ -86,8 +93,6 @@ def main():
             bar.progress(100)
             st.markdown(filtered_article)
             st.markdown(f"[Original Article]({entry.link})")
-        else:
-            container.empty()
 
 if __name__ == "__main__":
     main()
