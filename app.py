@@ -73,17 +73,21 @@ def main():
     )
 
     chain = get_filter_chain()
- 
+
     for entry in feed.entries: # <-- remove when done debugging
-        paragraphs = fetch_article_contents(entry.link)
 
-        with st.container():
-            with st.expander(entry.title) as self:
-                filtered_article = get_filtered_article(chain, paragraphs)
-
-                st.markdown("#### Filtered representation")
-                st.markdown(filtered_article)
-                st.markdown(f"[Original Article]({entry.link})")
+        btn = st.button(f"{entry.title}", use_container_width=True, )
+        container = st.empty()
+        if btn:
+            bar = st.progress(0)
+            paragraphs = fetch_article_contents(entry.link)
+            bar.progress(50)
+            filtered_article = get_filtered_article(chain, paragraphs)
+            bar.progress(100)
+            st.markdown(filtered_article)
+            st.markdown(f"[Original Article]({entry.link})")
+        else:
+            container.empty()
 
 if __name__ == "__main__":
     main()
