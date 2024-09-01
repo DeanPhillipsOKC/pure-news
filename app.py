@@ -23,7 +23,7 @@ def fetch_article_contents(url):
     return article_contents
 
 def create_llm():
-    return ChatOpenAI()
+    return ChatOpenAI(model="gpt-4o")
 
 def create_output_parser():
     return StrOutputParser()
@@ -61,7 +61,7 @@ def get_filter_chain():
 
     return chain 
 
-@st.cache_data
+@st.cache_resource
 def get_filtered_article(_chain, paragraphs):
     return _chain.invoke({"article": paragraphs})
 
