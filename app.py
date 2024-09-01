@@ -66,8 +66,12 @@ def get_filter_chain():
 def get_filtered_article(_chain, paragraphs):
     return _chain.invoke({"article": paragraphs})
 
+def get_article_toggle_session_state_key_name(button_caption):
+    return f'article_opened_{button_caption}'
+
 def toggle_article_opened(button_caption):
-    st.session_state[f'article_opened_{button_caption}'] = not st.session_state[f'article_opened_{button_caption}'] 
+    key = get_article_toggle_session_state_key_name(button_caption)
+    st.session_state[key] = not st.session_state[key] 
 
 def main():
     st.set_page_config(
@@ -78,14 +82,15 @@ def main():
 
     chain = get_filter_chain()
 
-    for entry in feed.entries: # <-- remove when done debugging
+    for entry in feed.entries:
 
+        button_state_key = get_article_toggle_session_state_key_name(entry.title)
         # Create state for button
-        if f'article_opened_{entry.title}' not in st.session_state:
-            st.session_state[f'article_opened_{entry.title}'] = True
+        if button_state_key not in st.session_state:
+            st.session_state[button_state_key] = True
 
         btn = st.button(f"{entry.title}", use_container_width=True, on_click=toggle_article_opened, args=(f'{entry.title}',))
-        if st.session_state[f'article_opened_{entry.title}'] and btn:
+        if st.session_state[button_state_key] and btn:
             bar = st.progress(0)
             paragraphs = fetch_article_contents(entry.link)
             bar.progress(50)
