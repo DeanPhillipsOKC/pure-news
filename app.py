@@ -5,6 +5,7 @@ import requests
 from langchain.prompts import HumanMessagePromptTemplate, AIMessagePromptTemplate, SystemMessagePromptTemplate, ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
+import os
 
 # AP: url =  "https://rss.app/feeds/SyIisu9HESEvayPf.xml"
 
@@ -71,6 +72,8 @@ def main():
         page_icon="📰",
         layout="centered"
     )
+
+    print(os.getenv("OPENAI_API_KEY"))
 
     chain = get_filter_chain()
  
