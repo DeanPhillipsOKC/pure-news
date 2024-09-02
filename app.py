@@ -6,6 +6,7 @@ from langchain.prompts import HumanMessagePromptTemplate, AIMessagePromptTemplat
 from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 from feeds import FeedManager
+from articles import ArticleProcessor
 
 # AP: url =  "https://rss.app/feeds/SyIisu9HESEvayPf.xml"
 
@@ -13,16 +14,7 @@ class PureNewsApp:
 
     def __init__(self) -> None:
         self.feed_manager = FeedManager()
-
-    def fetch_article_contents(self, url):
-        response = requests.get(url)
-        soup = BeautifulSoup(response.text, 'html.parser')
-        
-        paragraphs = soup.find_all('p')
-        article_contents = ""
-        for paragraph in paragraphs:
-            article_contents += paragraph.get_text()
-        return article_contents
+        self.article_processor = ArticleProcessor()
 
     def create_llm(self):
         return ChatOpenAI(model="gpt-4o")
@@ -66,7 +58,7 @@ class PureNewsApp:
         return chain 
 
     @st.cache_resource(ttl=86400)
-    def get_filtered_article(self, _chain, paragraphs):
+    def get_filtered_article(_self, _chain, paragraphs):
         return _chain.invoke({"article": paragraphs})
 
     def get_article_toggle_session_state_key_name(self, button_caption):
@@ -85,9 +77,7 @@ class PureNewsApp:
 
         feed_name = st.sidebar.selectbox("Select a feed", list(self.feed_manager.get_feed_names()))
 
-        feed_url = self.feed_manager.get_feed(feed_name)
-
-        feed = fp.parse(feed_url)
+        feed = self.feed_manager.get_feed(feed_name)
 
         chain = self.get_filter_chain()
 
@@ -115,7 +105,7 @@ class PureNewsApp:
 
                         if st.session_state[button_state_key]:
                             bar = st.progress(0)
-                            paragraphs = self.fetch_article_contents(entry.link)
+                            paragraphs = self.article_processor.fetch_article_contents(entry.link)
                             bar.progress(50)
                             filtered_article = self.get_filtered_article(chain, paragraphs)
                             bar.progress(100)
