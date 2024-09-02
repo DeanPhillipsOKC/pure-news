@@ -62,7 +62,7 @@ def get_filter_chain():
 
     return chain 
 
-@st.cache_resource
+@st.cache_resource(ttl=86400)
 def get_filtered_article(_chain, paragraphs):
     return _chain.invoke({"article": paragraphs})
 
