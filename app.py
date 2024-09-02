@@ -79,7 +79,7 @@ def main():
         page_icon="📰",
         layout="centered"
     )
-
+ 
     chain = get_filter_chain()
 
     for entry in feed.entries:
@@ -87,10 +87,10 @@ def main():
         button_state_key = get_article_toggle_session_state_key_name(entry.title)
         # Create state for button
         if button_state_key not in st.session_state:
-            st.session_state[button_state_key] = True
+            st.session_state[button_state_key] = False
 
         btn = st.button(f"{entry.title}", use_container_width=True, on_click=toggle_article_opened, args=(f'{entry.title}',))
-        if st.session_state[button_state_key] and btn:
+        if st.session_state[button_state_key]:
             bar = st.progress(0)
             paragraphs = fetch_article_contents(entry.link)
             bar.progress(50)
