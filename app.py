@@ -9,8 +9,12 @@ from langchain_core.output_parsers import StrOutputParser
 # AP: url =  "https://rss.app/feeds/SyIisu9HESEvayPf.xml"
 
 feeds = {
+    "The Atlantic Politics": "http://feeds.feedburner.com/AtlanticPoliticsChannel",
     "BBC U.S. Election": "https://rss.app/feeds/gn8XLqZTeImTjrmW.xml",
-    "Washington Post Politics": "https://feeds.washingtonpost.com/rss/politics?itid=lk_inline_manual_2"
+    "NPR Politics": "http://www.npr.org/rss/rss.php?id=1014",
+    "The Hill": "http://thehill.com/component/rss-syndicator/?feed_id=2",
+    "Vox Politics": "http://www.vox.com/rss/politics/index.xml",
+    "Washington Post Politics": "https://feeds.washingtonpost.com/rss/politics?itid=lk_inline_manual_2",
 }
 
 def fetch_article_contents(url):
@@ -39,15 +43,14 @@ def create_prompt_template():
                                                       
                                                       Please also create a TL;DR summary that is about a paragraph long that summarizes the article concisely.
 
-                                                      Please also include a summary of how a conservative might view this news.
+                                                      If this is a political post, please also include a fictional take on the article from a fictional conversative
+                                                      named Connie.  She is an intellectually honest, highly educated conservative that is very well informed.
 
-                                                      Please also include a summary of how a liberal or progressive might view this news.
+                                                      If this is a political post, please also include a fictional take on the article from a fictional liberal
+                                                      named Libby.  She is an intellectually honest, highly educated progressive that is very well informed.
 
-                                                      Please also include a summary of how a centrist, or impartial person might view this news.
-                                                      
-                                                      Please also rate the original article on a scale between 0 and 100.  0 is ultra left leaning.  100 is ultra right 
-                                                      leaning.50 is perfectly unbiased.  Also include qualifying words such as slightly, moderately, or extremely
-                                                      right or left leaning to help understand the score.
+                                                      If this is a political post, please also include a fictional take on the article from a fictional moderate
+                                                      named Newt.  He is an intellectually honest, highly educated moderate that is very well informed.
 
                                                       Please use markdown format for your output"""),
             HumanMessagePromptTemplate.from_template("\nArticle: {article}")
