@@ -12,7 +12,6 @@ feeds = {
     "The Atlantic Politics": "http://feeds.feedburner.com/AtlanticPoliticsChannel",
     "BBC U.S. Election": "https://rss.app/feeds/gn8XLqZTeImTjrmW.xml",
     "NPR Politics": "http://www.npr.org/rss/rss.php?id=1014",
-    "The Hill": "http://thehill.com/component/rss-syndicator/?feed_id=2",
     "Vox Politics": "http://www.vox.com/rss/politics/index.xml",
     "Washington Post Politics": "https://feeds.washingtonpost.com/rss/politics?itid=lk_inline_manual_2",
 }
