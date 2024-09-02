@@ -37,8 +37,11 @@ class PureNewsApp:
         feed = self.feed_manager.get_feed(feed_name)
 
         st.title("PureNews")
-
-        # st.write([entry.title for entry in feed.entries])
+        with st.expander("Instructions"):   
+            st.markdown("""
+                        * Select a news source from the left hand menu (may be collapsed on mobile).
+                        * Click on an article that you would like to learn more about.
+                        * To collapse an article, click its title again.""")
 
         processed_titles = set()
 
