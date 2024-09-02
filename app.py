@@ -33,18 +33,17 @@ def create_prompt_template():
     chat_template = ChatPromptTemplate.from_messages(
         [
             SystemMessagePromptTemplate.from_template("""
-                                                      You are a news filter.  Take the text of the article and decompose it to a set of facts.
-                                                      It should be as concise as possible while giving the full story.  There should be no hyperbole,
-                                                      conjecture, cynicism, or bias.  It should just be the facts as reported in a police report.  If
-                                                      an opinion is needed to get the full story (e.g. an eye whitness account) then it should be very
-                                                      clear that it is an opinion, and not a fact.  A list of bullet points would be a good way to 
-                                                      represent the filtered article.  
+                                                      You are a news filter.  Take the text of the article and decompose it to a set of essential facts.
+                                                      It should be as concise as possible while deliverying any important context.  There should be no hyperbole,
+                                                      conjecture, cynicism, or bias.  A list of bullet points would be a good way to represent the filtered article.  
                                                       
-                                                      Please include a score at the end of the summary that indicates
-                                                      the amount of vitriole, cynicism, or partisan language used in the original article.  It should be 
-                                                      greated using standard A, B, C, D, and F where A is the best and F is very irresponsible journalism.  
-                                                      After the score include a very concise rationale for why you picked that score.  Remember you are
-                                                      grading the original article and not your summary.  
+                                                      Please also create a TL;DR summary that is about a paragraph long that summarizes the article concisely.
+
+                                                      Please also include a summary of how a conservative might view this news.
+
+                                                      Please also include a summary of how a liberal or progressive might view this news.
+
+                                                      Please also include a summary of how a centrist, or impartial person might view this news.
                                                       
                                                       Please use markdown format for your output"""),
             HumanMessagePromptTemplate.from_template("\nArticle: {article}")
