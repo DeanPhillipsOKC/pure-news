@@ -7,6 +7,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 from feeds import FeedManager
 from articles import ArticleProcessor
+from llms import LLMManager
 
 # AP: url =  "https://rss.app/feeds/SyIisu9HESEvayPf.xml"
 
@@ -15,51 +16,7 @@ class PureNewsApp:
     def __init__(self) -> None:
         self.feed_manager = FeedManager()
         self.article_processor = ArticleProcessor()
-
-    def create_llm(self):
-        return ChatOpenAI(model="gpt-4o")
-
-    def create_output_parser(self):
-        return StrOutputParser()
-
-    def create_prompt_template(self):
-        chat_template = ChatPromptTemplate.from_messages(
-            [
-                SystemMessagePromptTemplate.from_template("""
-                                                        You are a news filter.  Take the text of the article and decompose it to a set of essential facts.
-                                                        It should be as concise as possible while deliverying any important context.  There should be no hyperbole,
-                                                        conjecture, cynicism, or bias.  A list of bullet points would be a good way to represent the filtered article.  
-                                                        
-                                                        Please also create a TL;DR summary that is about a paragraph long that summarizes the article concisely.
-
-                                                        If this is a political post, please also include a fictional take on the article from a fictional conversative
-                                                        named Connie.  She is an intellectually honest, highly educated conservative that is very well informed.
-
-                                                        If this is a political post, please also include a fictional take on the article from a fictional liberal
-                                                        named Libby.  She is an intellectually honest, highly educated progressive that is very well informed.
-
-                                                        If this is a political post, please also include a fictional take on the article from a fictional moderate
-                                                        named Newt.  He is an intellectually honest, highly educated moderate that is very well informed.
-
-                                                        Please use markdown format for your output"""),
-                HumanMessagePromptTemplate.from_template("\nArticle: {article}")
-            ]
-        )
-
-        return chat_template
-
-    def get_filter_chain(self):
-        prompt = self.create_prompt_template()
-        llm = self.create_llm()
-        output_parser = self.create_output_parser()
-
-        chain = prompt | llm | output_parser
-
-        return chain 
-
-    @st.cache_resource(ttl=86400)
-    def get_filtered_article(_self, _chain, paragraphs):
-        return _chain.invoke({"article": paragraphs})
+        self.llm_manager = LLMManager()
 
     def get_article_toggle_session_state_key_name(self, button_caption):
         return f'article_opened_{button_caption}'
@@ -78,8 +35,6 @@ class PureNewsApp:
         feed_name = st.sidebar.selectbox("Select a feed", list(self.feed_manager.get_feed_names()))
 
         feed = self.feed_manager.get_feed(feed_name)
-
-        chain = self.get_filter_chain()
 
         st.title("PureNews")
 
@@ -107,7 +62,7 @@ class PureNewsApp:
                             bar = st.progress(0)
                             paragraphs = self.article_processor.fetch_article_contents(entry.link)
                             bar.progress(50)
-                            filtered_article = self.get_filtered_article(chain, paragraphs)
+                            filtered_article = self.llm_manager.get_filtered_article(paragraphs)
                             bar.progress(100)
                             st.markdown(filtered_article)
                             st.markdown(f"[Original Article]({entry.link})")
