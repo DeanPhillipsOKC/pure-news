@@ -37,6 +37,8 @@ class PureNewsApp:
         st.markdown(filtered_article.tldr)
         
         st.markdown("#### Essential Facts")
+        filtered_article.essential_facts = filtered_article.essential_facts.replace(". -", ".\n-")
+        filtered_article.essential_facts = filtered_article.essential_facts.replace(". *", ".\n-")
         st.markdown(filtered_article.essential_facts)
 
         st.markdown(f"[Original Article]({feed_entry.link})")
