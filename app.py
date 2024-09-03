@@ -60,7 +60,7 @@ class PureNewsApp:
                         with stylable_container(
                             key="button_left_align_text",
                             css_styles="""
-                                .st-emotion-cache-1sy6v2f {
+                                button {
                                     justify-content: left;
                                 }"""
                         ):
