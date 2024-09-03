@@ -67,7 +67,12 @@ class PureNewsApp:
                             bar.progress(50)
                             filtered_article = self.llm_manager.get_filtered_article(paragraphs)
                             bar.progress(100)
-                            st.markdown(filtered_article)
+                            st.markdown("#### TL/DR")
+                            st.markdown(filtered_article.tldr)
+                            
+                            st.markdown("#### Essential Facts")
+                            st.markdown(filtered_article.essential_facts)
+
                             st.markdown(f"[Original Article]({entry.link})")
 
 if __name__ == "__main__":

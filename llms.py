@@ -1,23 +1,24 @@
 # llm_utils.py
 from langchain.prompts import HumanMessagePromptTemplate, AIMessagePromptTemplate, SystemMessagePromptTemplate, ChatPromptTemplate
 from langchain_openai import ChatOpenAI
-from langchain_core.output_parsers import StrOutputParser
+from langchain_core.output_parsers import PydanticOutputParser
 import streamlit as st
+from articles import ArticleInsights
 
 class LLMManager:
     def __init__(self):
-        self.llm = self.create_llm()
-        self.output_parser = self.create_output_parser()
-        self.prompt_template = self.create_prompt_template()
-        self.chain = self.create_filter_chain()
+        self.llm = self._create_llm()
+        self.output_parser = self._create_output_parser()
+        self.prompt_template = self._create_prompt_template()
+        self.chain = self._create_filter_chain()
 
-    def create_llm(self):
+    def _create_llm(self):
         return ChatOpenAI(model="gpt-4o")
 
-    def create_output_parser(self):
-        return StrOutputParser()
+    def _create_output_parser(self):
+        return PydanticOutputParser(pydantic_object=ArticleInsights)
 
-    def create_prompt_template(self):
+    def _create_prompt_template(self):
         chat_template = ChatPromptTemplate.from_messages(
             [
                 SystemMessagePromptTemplate.from_template("""
@@ -38,14 +39,14 @@ class LLMManager:
 
                     Please use markdown format for your output"""
                                                           ),
-                HumanMessagePromptTemplate.from_template("\nArticle: {article}")
+                HumanMessagePromptTemplate.from_template("\nArticle: {article}\n\nFormat Instructions: {format_instructions}")
             ]
         )
         return chat_template
 
-    def create_filter_chain(self):
+    def _create_filter_chain(self):
         return self.prompt_template | self.llm | self.output_parser
     
     @st.cache_resource(ttl=86400)
     def get_filtered_article(_self, paragraphs):
-        return _self.chain.invoke({"article": paragraphs})
+        return _self.chain.invoke({"article": paragraphs, "format_instructions": _self.output_parser.get_format_instructions()})
