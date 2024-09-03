@@ -2,6 +2,7 @@ import streamlit as st
 from feeds import FeedManager
 from articles import ArticleProcessor
 from llms import LLMManager
+from streamlit_extras.stylable_container import stylable_container
 
 # AP: url =  "https://rss.app/feeds/SyIisu9HESEvayPf.xml"
 
@@ -23,20 +24,25 @@ class PureNewsApp:
         st.set_page_config(
             page_title="PureNews",
             page_icon="📰",
-            layout="centered"
+            layout="wide"
         )
 
         feed_name = st.sidebar.selectbox("Select a feed", list(self.feed_manager.get_feed_names()))
 
         feed = self.feed_manager.get_feed(feed_name)
 
-        st.title("PureNews")
-        with st.expander("Instructions"):   
-            st.markdown("""
-                        * Select a news source from the left hand menu (may be collapsed on mobile).
-                        * Click on an article that you would like to learn more about.
-                        * To collapse an article, click its title again.""")
+        st.markdown(
+            """
+        <style>
+            button .st-emotion-cache-1sy6v2f {
+                justify-content: left;
+            }
+        </style>
+        """,
+            unsafe_allow_html=True,
+        )
 
+        st.title("PureNews")
         processed_titles = set()
 
         with st.empty():
@@ -51,7 +57,14 @@ class PureNewsApp:
                         if button_state_key not in st.session_state:
                             st.session_state[button_state_key] = False
 
-                        btn = st.button(f"{entry.title}", use_container_width=True, on_click=self.toggle_article_opened, args=(f'{entry.title}',))
+                        with stylable_container(
+                            key="button_left_align_text",
+                            css_styles="""
+                                .st-emotion-cache-1sy6v2f {
+                                    justify-content: left;
+                                }"""
+                        ):
+                            btn = st.button(f"{entry.title}", use_container_width=True, on_click=self.toggle_article_opened, args=(f'{entry.title}',))
 
                         processed_titles.add(entry.title)
 
