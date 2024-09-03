@@ -22,6 +22,11 @@ class PureNewsApp:
         key = self._get_article_toggle_session_state_key_name(button_caption)
         st.session_state[key] = not st.session_state[key] 
 
+    def _initialize_button_state(self, entry_title: str) -> None:
+        button_state_key = self._get_article_toggle_session_state_key_name(entry_title)
+        if button_state_key not in st.session_state:
+            st.session_state[button_state_key] = False
+
     def _load_article_insights(self, feed_entry):
         bar = st.progress(0)
         paragraphs = self.article_processor.fetch_article_contents(feed_entry.link)
@@ -39,6 +44,28 @@ class PureNewsApp:
     def _was_article_already_added(self, article_title):
         return article_title in self.processed_titles
 
+    def _display_feed_entry(self, feed_entry):
+        if self._was_article_already_added(feed_entry.title):
+            return
+
+        self._initialize_button_state(feed_entry.title)
+
+        with stylable_container(
+            key="button_left_align_text",
+            css_styles="button { justify-content: left; }"
+        ):
+            st.button(
+                f"{feed_entry.title}", 
+                use_container_width=True, 
+                on_click=self._toggle_article_opened, 
+                args=(feed_entry.title,)
+            )
+
+        self.processed_titles.add(feed_entry.title)
+
+        if st.session_state[self._get_article_toggle_session_state_key_name(feed_entry.title)]:
+            self._load_article_insights(feed_entry)
+
     def main(self):
         st.set_page_config(page_title="PureNews", page_icon="📰", layout="wide")
         st.title("PureNews")
@@ -47,27 +74,7 @@ class PureNewsApp:
         feed = self.feed_manager.get_feed(feed_name)
 
         for entry in feed.entries:
-
-            if not self._was_article_already_added(entry.title):
-
-                button_state_key = self._get_article_toggle_session_state_key_name(entry.title)
-                # Create state for button
-                if button_state_key not in st.session_state:
-                    st.session_state[button_state_key] = False
-
-                with stylable_container(
-                    key="button_left_align_text",
-                    css_styles="""
-                        button {
-                            justify-content: left;
-                        }"""
-                ):
-                    btn = st.button(f"{entry.title}", use_container_width=True, on_click=self._toggle_article_opened, args=(f'{entry.title}',))
-
-                self.processed_titles.add(entry.title)
-
-                if st.session_state[button_state_key]:
-                    self._load_article_insights(entry)
+            self._display_feed_entry(entry)
 
 if __name__ == "__main__":
     app = PureNewsApp()
