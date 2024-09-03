@@ -13,7 +13,8 @@ class LLMManager:
         self.chain = self._create_filter_chain()
 
     def _create_llm(self):
-        return ChatOpenAI(model="gpt-4o")
+        # return ChatOpenAI(model="gpt-4o")
+        return ChatOpenAI()
 
     def _create_output_parser(self):
         return PydanticOutputParser(pydantic_object=ArticleInsights)
@@ -26,18 +27,7 @@ class LLMManager:
                     It should be as concise as possible while deliverying any important context.  There should be no hyperbole,
                     conjecture, cynicism, or bias.  A list of bullet points would be a good way to represent the filtered article.  
                     
-                    Please also create a TL;DR summary that is about a paragraph long that summarizes the article concisely.
-
-                    If this is a political post, please also include a fictional take on the article from a fictional conversative
-                    named Connie.  She is an intellectually honest, highly educated conservative that is very well informed.
-
-                    If this is a political post, please also include a fictional take on the article from a fictional liberal
-                    named Libby.  She is an intellectually honest, highly educated progressive that is very well informed.
-
-                    If this is a political post, please also include a fictional take on the article from a fictional moderate
-                    named Newt.  He is an intellectually honest, highly educated moderate that is very well informed.
-
-                    Please use markdown format for your output"""
+                    Please also create a TL;DR summary that is about a paragraph long that summarizes the article concisely."""
                                                           ),
                 HumanMessagePromptTemplate.from_template("\nArticle: {article}\n\nFormat Instructions: {format_instructions}")
             ]

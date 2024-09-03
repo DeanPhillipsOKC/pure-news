@@ -1,10 +1,4 @@
-import feedparser as fp
 import streamlit as st
-from bs4 import BeautifulSoup
-import requests
-from langchain.prompts import HumanMessagePromptTemplate, AIMessagePromptTemplate, SystemMessagePromptTemplate, ChatPromptTemplate
-from langchain_openai import ChatOpenAI
-from langchain_core.output_parsers import StrOutputParser
 from feeds import FeedManager
 from articles import ArticleProcessor
 from llms import LLMManager
