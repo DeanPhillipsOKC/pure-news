@@ -31,17 +31,6 @@ class PureNewsApp:
 
         feed = self.feed_manager.get_feed(feed_name)
 
-        st.markdown(
-            """
-        <style>
-            button .st-emotion-cache-1sy6v2f {
-                justify-content: left;
-            }
-        </style>
-        """,
-            unsafe_allow_html=True,
-        )
-
         st.title("PureNews")
         processed_titles = set()
 
