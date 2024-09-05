@@ -2,7 +2,7 @@ from typing import Set
 import streamlit as st
 from feeds import FeedManager
 from articles import ArticleProcessor
-from llms import LLMManager
+from llms import ArticleDistiller, ArticleCompressor
 from streamlit_extras.stylable_container import stylable_container
 
 # AP: url =  "https://rss.app/feeds/SyIisu9HESEvayPf.xml"
@@ -12,7 +12,8 @@ class PureNewsApp:
     def __init__(self) -> None:
         self.feed_manager = FeedManager()
         self.article_processor = ArticleProcessor()
-        self.llm_manager = LLMManager()
+        self.article_compressor = ArticleCompressor()
+        self.article_distiller = ArticleDistiller()
         self.processed_titles: Set[str] = set()
 
     def _get_article_toggle_session_state_key_name(self, button_caption):
@@ -30,8 +31,12 @@ class PureNewsApp:
     def _load_article_insights(self, feed_entry):
         bar = st.progress(0)
         paragraphs = self.article_processor.fetch_article_contents(feed_entry.link)
-        bar.progress(50)
-        filtered_article = self.llm_manager.get_filtered_article(paragraphs)
+
+        bar.progress(33)
+        compressed_article = self.article_compressor.get_compressed_article(paragraphs)
+
+        bar.progress(66)
+        filtered_article = self.article_distiller.get_filtered_article(compressed_article)
         bar.progress(100)
         st.markdown("#### TL/DR")
         st.markdown(filtered_article.tldr)
