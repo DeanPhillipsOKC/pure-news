@@ -1,5 +1,5 @@
-# feeds.py
 import feedparser as fp
+from dateutil import parser as date_parser
 
 class FeedManager:
     def __init__(self):
@@ -13,7 +13,17 @@ class FeedManager:
         }
 
     def get_feed(self, feed_name):
-        return fp.parse(self.feeds[feed_name])
+        feed = fp.parse(self.feeds[feed_name])
+        
+        # Sort entries by the 'published' field in descending order (most recent first)
+        sorted_entries = sorted(
+            feed.entries,
+            key=lambda entry: date_parser.parse(entry.published),
+            reverse=True
+        )
+
+        feed.entries = sorted_entries
+        return feed
 
     def get_feed_names(self):
         return list(self.feeds.keys())
