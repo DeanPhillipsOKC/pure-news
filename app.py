@@ -59,7 +59,7 @@ class PureNewsApp:
 
         with stylable_container(
             key="button_left_align_text",
-            css_styles="button { justify-content: left; }"
+            css_styles="button { justify-content: left; text-align: left; }"
         ):
             st.button(
                 f"{feed_entry.title}", 
