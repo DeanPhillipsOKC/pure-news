@@ -4,12 +4,14 @@ from dateutil import parser as date_parser
 class FeedManager:
     def __init__(self):
         self.feeds = {
-            "The Atlantic Politics": "http://feeds.feedburner.com/AtlanticPoliticsChannel",
-            "BBC U.S. Election": "https://rss.app/feeds/gn8XLqZTeImTjrmW.xml",
-            "NPR News": "http://www.npr.org/rss/rss.php?id=1001",
-            "NPR Politics": "http://www.npr.org/rss/rss.php?id=1014",
-            "Vox Politics": "http://www.vox.com/rss/politics/index.xml",
-            "Washington Post Politics": "https://feeds.washingtonpost.com/rss/politics?itid=lk_inline_manual_2",
+            "The Atlantic: News": "http://feeds.feedburner.com/TheAtlantic",
+            "The Atlantic: Politics": "http://feeds.feedburner.com/AtlanticPoliticsChannel",
+            "BBC: U.S. Election": "https://rss.app/feeds/gn8XLqZTeImTjrmW.xml",
+            "Fox News: Science": "http://feeds.foxnews.com/foxnews/scitech",
+            "NPR: News": "http://www.npr.org/rss/rss.php?id=1001",
+            "NPR: Politics": "http://www.npr.org/rss/rss.php?id=1014",
+            "Vox: Politics": "http://www.vox.com/rss/politics/index.xml",
+            "Washington Post: Politics": "https://feeds.washingtonpost.com/rss/politics?itid=lk_inline_manual_2",
         }
 
     def get_feed(self, feed_name):

@@ -55,6 +55,9 @@ class PureNewsApp:
         if self._was_article_already_added(feed_entry.title):
             return
 
+        feed_entry.title = feed_entry.title.replace("<em>", "")
+        feed_entry.title = feed_entry.title.replace("</em>", "")
+
         self._initialize_button_state(feed_entry.title)
 
         with stylable_container(
