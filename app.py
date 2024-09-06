@@ -76,13 +76,19 @@ class PureNewsApp:
     def main(self):
         st.set_page_config(page_title="PureNews", page_icon="📰", layout="wide")
         
-        feed_name = st.sidebar.selectbox("Select a feed", list(self.feed_manager.get_feed_names()))
-        feed = self.feed_manager.get_feed(feed_name)
-        
-        st.title("PureNews", help="Select a news feed from the left hand collapsable menu, and click on the articles that you want to read.")
-        st.markdown("AI distilled news without the noise.")
+        st.title("PureNews")
 
-        st.subheader(f"Current Feed: {feed_name}")
+        st.info("""
+        Experience distilled news through AI, free from the noise!
+                
+        Select a news source to get started!
+        """, icon="👋")
+
+        feed_name = st.selectbox("Select a feed", list(self.feed_manager.get_feed_names()))
+        feed = self.feed_manager.get_feed(feed_name)
+
+        st.markdown(f"#### Articles from: {feed_name}")
+
         for entry in feed.entries:
             self._display_feed_entry(entry)
 
