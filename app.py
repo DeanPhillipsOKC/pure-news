@@ -37,6 +37,7 @@ class PureNewsApp:
 
         bar.progress(66)
         filtered_article = self.article_distiller.get_filtered_article(compressed_article)
+        
         bar.progress(100)
         st.markdown("#### TL/DR")
         st.markdown(filtered_article.tldr)
@@ -84,7 +85,7 @@ class PureNewsApp:
         st.info("""
         Experience distilled news through AI, free from the noise!
                 
-        Select a news source to get started!
+        Select a news source to get started.
         """, icon="👋")
 
         feed_name = st.selectbox("Select a feed", list(self.feed_manager.get_feed_names()))
