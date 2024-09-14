@@ -12,7 +12,7 @@ class ArticleCompressor:
         self.chain = self._create_filter_chain()
 
     def _create_llm(self):
-        return ChatOpenAI()
+        return ChatOpenAI(temperature=0)
 
     def _create_output_parser(self):
         return StrOutputParser()
@@ -22,7 +22,7 @@ class ArticleCompressor:
             [
                 SystemMessagePromptTemplate.from_template("""
                     You are a news compressor.  Take the article and get rid of as many characters / tokens as possible
-                    without changing the meeting, or omitting necessary information.  You can eliminate unnecessary prose,
+                    without changing the meaning, or omitting any important information.  You can eliminate unnecessary prose,
                     use smaller synonyms, etc."""
                                                           ),
                 HumanMessagePromptTemplate.from_template("\nArticle: {article}")

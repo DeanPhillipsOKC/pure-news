@@ -22,9 +22,9 @@ class ArticleDistiller:
         chat_template = ChatPromptTemplate.from_messages(
             [
                 SystemMessagePromptTemplate.from_template("""
-                    You are a news filter.  Take the text of the article and decompose it to a set of essential facts.
-                    It should be as concise as possible while deliverying any important context.  There should be no hyperbole,
-                    conjecture, cynicism, or bias.  A list of bullet points would be a good way to represent the filtered article.  
+                    You are a news filter.  Take the text of the article and decompose it to a set of individual facts.
+                    There should be no hyperbole, conjecture, cynicism, or bias.  A list of bullet points would be a good way 
+                    to represent the filtered article.
                     
                     Please also create a TL;DR summary that is about a paragraph long that summarizes the article concisely."""
                                                           ),
